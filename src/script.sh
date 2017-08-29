@@ -94,7 +94,6 @@ UnlockProfile()
     sleep 1
     launchctl remove com.jamfsoftware.task.Every\ 15\ Minutes
     launchctl remove com.jamfsoftware.jamf.daemon
-    launchctl remove com.jamfsoftware.jamf.agent
     echo "Listing enabled JAMF services"
     launchctl list | grep com.jam
     echo
