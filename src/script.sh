@@ -76,20 +76,28 @@ StopVPN()
 UnlockProfile()
 {
 	echo
-	echo "Removing profile"
+	echo "Unlocking profile"
 	MDM_UUID=$(profiles -Lv | awk '/attribute: name: MDM/,/attribute: profileUUID:/' | awk '/attribute: profileUUID:/ {print $NF}')
-	echo $MDM_UUID
-	if [ -z "$MDM_UUID" ]
-	then
-	echo "-MDM profile NOT found. Attempting to manage-"
-	jamf manage
+	echo "MDM_UUID:" $MDM_UUID
+
+	if [ -z "$MDM_UUID" ]; then
+        echo "MDM profile NOT found. Attempting to manage"
+        jamf manage
 	else
-	echo "-MDM profile found. Removing MDM before attempting to manage-"
-	profiles -R -p "$MDM_UUID"
-	sleep 5
-	jamf manage
+        echo "MDM profile found. Removing MDM before attempting to manage"
+        profiles -R -p "$MDM_UUID"
+        sleep 2
+        jamf manage
 	fi
-	echo
+
+	echo "Disabling JAMF"
+    sleep 1
+    launchctl remove com.jamfsoftware.task.Every\ 15\ Minutes
+    launchctl remove com.jamfsoftware.jamf.daemon
+    launchctl remove com.jamfsoftware.jamf.agent
+    echo "Listing enabled JAMF services"
+    launchctl list | grep com.jam
+    echo
 }
 
 if [ $stopAntivirus -eq 1 ]; then
