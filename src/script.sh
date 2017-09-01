@@ -13,10 +13,10 @@ fi
 # Loop through the args
 while [ $# -gt 0  -a  $validArg -eq 1 ]; do
     validArg=0;
-    if [ $1 == "stop-antivirus" ];	then	stopAntivirus=1;	validArg=1;	fi
-    if [ $1 == "start-vpn" ];		then	startVpn=1;			validArg=1;	fi
-    if [ $1 == "stop-vpn" ];		then	stopVpn=1;			validArg=1;	fi
-    if [ $1 == "unlock-profile" ];	then	unlockProfile=1;	validArg=1;	fi
+    if [ $1 == "stop-antivirus" ];  then    stopAntivirus=1;    validArg=1;	fi
+    if [ $1 == "start-vpn" ];       then    startVpn=1;         validArg=1;	fi
+    if [ $1 == "stop-vpn" ];        then    stopVpn=1;          validArg=1;	fi
+    if [ $1 == "unlock-profile" ];  then    unlockProfile=1;    validArg=1;	fi
 
     if [ $validArg -eq 1 ]; then
         shift
