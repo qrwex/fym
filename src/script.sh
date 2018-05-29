@@ -51,23 +51,25 @@ StopAntiVirus()
     echo
 }
 
-# Start BESAgentControlPanel
+# Start Pulse Secure
 StartVPN()
 {
     echo
-    echo "Starting BESAgentControlPanel"
-    /Library/BESAgent/BESAgent.app/Contents/MacOS/BESAgentControlPanel.sh -start
+    echo "Stopping Pulse Secure Agent"
+    launchctl load /Library/LaunchAgents/net.pulsesecure.pulsetray.plist
+    sleep 2
+    echo "Started!"
     echo
 }
 
-# Stop BESAgentControlPanel
+# Stop Pulse Secure
 StopVPN()
 {
     echo
-    echo "Stopping BESAgentControlPanel"
-    /Library/BESAgent/BESAgent.app/Contents/MacOS/BESAgentControlPanel.sh -stop
+    echo "Stopping Pulse Secure Agent"
+    launchctl unload /Library/LaunchAgents/net.pulsesecure.pulsetray.plist
     sleep 2
-    launchctl stop net.pulsesecure.AccessService
+    echo "Stopped!"
     echo
 }
 
@@ -77,25 +79,9 @@ UnlockProfile()
 {
     echo
     echo "Unlocking profile"
-    MDM_UUID=$(profiles -Lv | awk '/attribute: name: MDM/,/attribute: profileUUID:/' | awk '/attribute: profileUUID:/ {print $NF}')
-    echo "MDM_UUID:" $MDM_UUID
-
-    if [ -z "$MDM_UUID" ]; then
-        echo "MDM profile NOT found. Attempting to manage"
-        jamf manage
-    else
-        echo "MDM profile found. Removing MDM before attempting to manage"
-        profiles -R -p "$MDM_UUID"
-        sleep 2
-        jamf manage
-    fi
-
-    echo "Disabling JAMF"
-    sleep 1
-    launchctl remove com.jamfsoftware.task.Every\ 15\ Minutes
-    launchctl remove com.jamfsoftware.jamf.daemon
-    echo "Listing enabled JAMF services"
-    launchctl list | grep com.jam
+    /usr/local/bin/jamf removeFramework
+    sleep 2
+    echo "Unlocked!"
     echo
 }
 
