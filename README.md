@@ -1,4 +1,4 @@
-# Free your Mac
+# Free Your Mac
 
 ### Usage
 ```sh
